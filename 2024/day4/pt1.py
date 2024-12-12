@@ -37,7 +37,7 @@ def search_diagonal(lines):
 
 	rotated = list(zip(*reversed(lines)))
 	rotated = [''.join(line) for line in rotated]
-	char_liist = [list(line) for line in rotated]
+	char_list = [list(line) for line in rotated]
 	rl_diagonals = list()
 
 	for i in range(-len(char_list)+1, len(char_list[0])):
