@@ -42,7 +42,18 @@ def is_ordered(l, order):
 				return True
 			target = l[j]
 	return False
-
+	
+def is_good_line(l, page_order):
+	for i in range(len(l) - 1, 0, -1):
+		this_page = l[i]
+		for j in range(i-1, -1, -1):
+			next = l[j]
+			if this_page not in page_order:
+				page_order[this_page] = set()
+			if next in page_order[this_page]:
+				return False
+	return True
+	
 def get_middle_page(l):
 	return l[len(l)//2]
 
@@ -77,34 +88,27 @@ def main():
 			elif line == '\n' or '|' not in line:
 				page_lists = read_pages(f)
 		f.close()
-		
-#		if isTest:
-#			print("pages:")
-#			for plist in page_lists:
-#				print(plist)
-#			print("order:")
-#			for elem in page_order:
-#				print(elem, page_order[elem])
-		
-		print("intersection:",len(set.intersection(seen, page_order.keys())))
-		print("equal sets:", seen == page_order.keys())
+				
 		
 		print_data(page_lists, page_order)
 		
 		# get order
-		order = get_order(page_order, seen)
-		order.reverse()
+#		order = get_order(page_order, seen)
+#		order.reverse()
 #		print("order:", order)
 		
 		
 		# check for valid orders
 		for l in page_lists:
-			if is_ordered(l, order):
+			if is_good_line(l, page_order):
 #				print("ordered!")
 				sum_of_middle_pages += get_middle_page(l)
+#			if is_ordered(l, order):
+#				print("ordered!")
+#				sum_of_middle_pages += get_middle_page(l)
 #			else:
 #				print("not ordered:", l)
 				
-#		print(f"sum: {sum_of_middle_pages}")
+		print(f"sum: {sum_of_middle_pages}")
 if __name__ == "__main__":
     main()
