@@ -1,6 +1,6 @@
 import copy
 
-isTest = True
+isTest = False
 
 def read_pages(f):
 	result = list()
@@ -67,46 +67,32 @@ def print_data(page_lists, page_order):
 def order_line(l, page_order):
 	result = list()
 	sets = list()
+	order = dict()
 	
 	for page in l:
-		print(page_order[page], set(l))
-		print(set.intersection(page_order[page], set(l)))
-		page_order[page] = set.intersection(page_order[page], set(l))
-		sets.append(page_order[page])
-		
-	if l == [97, 13, 75, 29, 47]:
-		print("sets")
-		print(sets)
-		print()
-		print("page order")
-		for k, v in page_order.items():
-			print(k, v)
-		print()
-		
-		print(set.intersection(set([97, 13, 75, 29, 47]), {75, 13, 47, 61, 53, 29}))
+		order[page] = set.intersection(page_order[page], set(l))
+		sets.append(order[page])
 	
 	while len(result) < len(l):
 		next = -1
-		
 		s = set.intersection(*sets)
 		if s:
 			next = s.pop()
 		else:
-			for k, v in page_order.items():
+			for k, v in order.items():
 				if not v:
 					next = k
-					page_order.pop(k)
+					order.pop(k)
 					break
 		result.append(next)
 		
-		if next in page_order.keys():
-			page_order.pop(next)
+		if next in order.keys():
+			order.pop(next)
 			
-		for s in page_order.values():
+		for s in order.values():
 			if next in s:
 				s.remove(next)
 				
-#	result = result.reverse()
 	result.reverse()
 	return result
 	
@@ -135,27 +121,15 @@ def main():
 				page_lists = read_pages(f)
 		f.close()
 				
-		print_data(page_lists, page_order)
+#		print_data(page_lists, page_order)
 		
-		# get order
-#		order = get_order(page_order, seen)
-#		order.reverse()
-#		print("order:", order)
-		
-#		order_line(page_lists[0], copy.copy(page_order))
 		# check for invalid orders
 		for l in page_lists:
 			if not is_good_line(l, page_order):
-				print(f"ordering {l}")
-				ordered = order_line(l, (page_order.copy()))
-#				print(ordered)
-#				sum_of_middle_pages += get_middle_page(l)
-#			if is_ordered(l, order):
-#				print("ordered!")
-#				sum_of_middle_pages += get_middle_page(l)
-#			else:
-#				print("not ordered:", l)
+				ordered = order_line(l, page_order)
+				sum_of_middle_pages += get_middle_page(ordered)
 				
 		print(f"sum: {sum_of_middle_pages}")
+		
 if __name__ == "__main__":
     main()
