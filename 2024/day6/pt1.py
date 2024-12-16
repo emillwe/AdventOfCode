@@ -84,16 +84,20 @@ class map():
 			dir = self.guard_dir()
 			# TODO: check obstacle before movement!!
 			if dir == direction.NORTH:
-				print("North")
+                if not quiet:
+                    print("North")
 				self.y -= 1
 			elif dir == direction.EAST:
-				print("East")
+                if not quiet:
+                    print("North")
 				self.x += 1
 			elif dir == direction.SOUTH:
-				print("South")
+				if not quiet:
+                    print("North")
 				self.y += 1
 			elif dir == direction.WEST:
-				print("West")
+				if not quiet:
+                    print("North")
 				self.x -= 1
 			else:
 				print(f"Direction: {dir}")
