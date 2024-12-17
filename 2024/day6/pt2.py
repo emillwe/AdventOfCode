@@ -1,7 +1,7 @@
 import numpy as np
 from enum import Enum
 
-isTest = False
+isTest = True
 
 class direction(Enum):
 	NORTH = 0
@@ -18,6 +18,7 @@ class map():
 	grid = list()
 	obstacles = set()
 	visited = {}
+    obs_locs = {}
 	num_loops = 0
 	x = 0
 	y = 0
