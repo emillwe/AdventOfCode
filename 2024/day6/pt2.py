@@ -1,7 +1,7 @@
 import numpy as np
 from enum import Enum
 
-isTest = True
+isTest = False
 
 class direction(Enum):
 	NORTH = 0
@@ -17,7 +17,8 @@ class map():
 	dir_index = 0
 	grid = list()
 	obstacles = set()
-	visited = set()
+	visited = {}
+	num_loops = 0
 	x = 0
 	y = 0
 	
@@ -77,35 +78,58 @@ class map():
 	def move_guard(self, quiet=True):
 		is_in_bounds = self.guard_in_bounds()
 		while is_in_bounds:
-			self.visited.add((self.y, self.x)) # been there
+			dir = self.guard_dir()
+			# been there facing this way
+			if (self.y, self.x) not in visited:
+				visited[(self.y, self.x)] = set([dir])
+			else:
+				visited[(self.y, self.x)].add(dir)
 			if not quiet:
 				print(f"Guard at {self.y, self.x}")
-			
-			dir = self.guard_dir()
-			# TODO: check obstacle before movement!!
 			if dir == direction.NORTH:
 				if not quiet:
 					print("North")
-							# hit an obstacle?
-				if self.is_obstacle((self.y, self.x)):
+				# hit an obstacle?
+				if self.is_obstacle((self.y-1, self.x)):
 					if not quiet:
-						print(f"Hit obstacle at {self.x}, {self.y}")
+						print(f"Hit obstacle at {self.x}, {self.y-1}")
 					# turn right 90 deg. and continue
 					self.dir_index += 1
 				else:
-				self.y -= 1
+					self.y -= 1
 			elif dir == direction.EAST:
 				if not quiet:
 					print("East")
-				self.x += 1
+				# hit an obstacle?
+				if self.is_obstacle((self.y, self.x+1)):
+					if not quiet:
+						print(f"Hit obstacle at {self.x+1}, {self.y}")
+					# turn right 90 deg. and continue
+					self.dir_index += 1
+				else:
+					self.x += 1
 			elif dir == direction.SOUTH:
 				if not quiet:
 					print("South")
-				self.y += 1
+				# hit an obstacle?
+				if self.is_obstacle((self.y+1, self.x)):
+					if not quiet:
+						print(f"Hit obstacle at {self.x}, {self.y+1}")
+					# turn right 90 deg. and continue
+					self.dir_index += 1
+				else:
+					self.y += 1
 			elif dir == direction.WEST:
 				if not quiet:
 					print("West")
-				self.x -= 1
+				# hit an obstacle?
+				if self.is_obstacle((self.y, self.x-1)):
+					if not quiet:
+						print(f"Hit obstacle at {self.x-1}, {self.y}")
+					# turn right 90 deg. and continue
+					self.dir_index += 1
+				else:
+					self.x -= 1
 			else:
 				print(f"Direction: {dir}")
 			
@@ -128,8 +152,8 @@ def main():
 	m.show_obstacles()
 	m.show_guard()
 	m.show_dir()
-	m.move_guard(quiet=False)
-#	print(m.num_visited())
+	m.move_guard(quiet=True)
+	print(m.num_visited())
 	
 if __name__ == ("__main__"):
 	main()
